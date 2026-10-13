@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZIYAT | Admin</title>
+    <style>
+      :root {
+        --bg: #f3efe9;
+        --panel: #fffdf9;
+        --panel-alt: #f6f3ee;
+        --primary: #2c6b5b;
+        --primary-dark: #184b3d;
+        --primary-soft: rgba(44, 107, 91, 0.08);
+        --text: #1f2a2b;
+        --muted: #546562;
+        --line: rgba(31, 42, 43, 0.12);
+        --shadow: 0 24px 48px rgba(26, 58, 49, 0.08);
+        --danger: #b94a48;
+      }
+
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: linear-gradient(180deg, #f9f5f1 0%, #f3efe9 100%);
+        color: var(--text);
+      }
+      body {
+        min-height: 100vh;
+      }
+      a { color: inherit; text-decoration: none; }
+      button, input, select, textarea { font: inherit; }
+      input, select, textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--text);
+      }
+      textarea { min-height: 110px; resize: vertical; }
+      button {
+        cursor: pointer;
+        border: none;
+        border-radius: 12px;
+        padding: 11px 15px;
+        font-weight: 700;
+      }
+      .hidden { display: none !important; }
+      .muted { color: var(--muted); }
+
+      .admin-shell {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding: 22px 18px 18px;
+        background: linear-gradient(180deg, #1b2d2a 0%, #183d39 100%);
+        color: #edf7f3;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 8px 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+      .brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: var(--primary);
+        color: white;
+      }
+
+      .nav-group {
+        display: grid;
+        gap: 8px;
+      }
+      .nav-label {
+        padding: 0 10px;
+        color: rgba(255,255,255,0.68);
+        font-size: 0.70rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .nav-btn {
+        width: 100%;
+        text-align: left;
+        background: transparent;
+        border: 1px solid transparent;
+        color: #edf7f3;
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-weight: 600;
+      }
+      .nav-btn.active, .nav-btn:hover {
+        background: rgba(156, 196, 181, 0.12);
+        border-color: rgba(255,255,255,0.08);
+      }
+      .logout-btn {
+        margin-top: auto;
+        background: rgba(255,255,255,0.06);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+
+      .workspace {
+        padding: 26px;
+      }
+
+      .login-card {
+        max-width: 440px;
+        margin: 14vh auto 0;
+        background: rgba(255,255,255,0.8);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: 32px 28px;
+      }
+      .login-card h1 {
+        margin: 10px 0 8px;
+        font-size: clamp(2rem, 4vw, 2.6rem);
+        letter-spacing: -0.05em;
+      }
+      .eyebrow {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(44, 107, 91, 0.08);
+        color: var(--primary-dark);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+      .login-form {
+        display: grid;
+        gap: 14px;
+        margin-top: 18px;
+      }
+      .field {
+        display: grid;
+        gap: 8px;
+      }
+      label {
+        font-weight: 700;
+        font-size: 0.92rem;
+      }
+      .primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 14px 24px rgba(44, 107, 91, 0.18);
+      }
+      .secondary {
+        background: transparent;
+        border: 1px solid rgba(44, 107, 91, 0.18);
+        color: var(--primary-dark);
+      }
+      .danger {
+        background: rgba(185, 74, 72, 0.08);
+        color: var(--danger);
+        border: 1px solid rgba(185, 74, 72, 0.2);
+      }
+
+      .dashboard {
+        display: grid;
+        gap: 20px;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 12px;
+      }
+      .topbar h1 {
+        margin: 8px 0 0;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+        letter-spacing: -0.05em;
+      }
+      .topbar-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 16px;
+      }
+      .stat-card, .panel {
+        background: rgba(255,255,255,0.8);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+      }
+      .stat-card {
+        padding: 18px 18px 14px;
+      }
+      .stat-card strong {
+        display: block;
+        font-size: 2rem;
+        margin-top: 8px;
+        letter-spacing: -0.04em;
+      }
+
+      .quick-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+      }
+      .quick-card {
+        padding: 18px;
+        background: rgba(44, 107, 91, 0.04);
+        border: 1px solid rgba(44, 107, 91, 0.12);
+        border-radius: 16px;
+        text-align: left;
+      }
+      .quick-card strong {
+        display: block;
+        margin-top: 8px;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: minmax(300px, 1fr) minmax(0, 1.25fr);
+        gap: 18px;
+      }
+      .panel {
+        padding: 18px;
+      }
+      .panel h3 {
+        margin-top: 0;
+      }
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .toolbar input { flex: 1; }
+      .object-list {
+        display: grid;
+        gap: 12px;
+      }
+      .object-item {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--panel-alt);
+      }
+      .object-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 10px;
+      }
+      .chip {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(44, 107, 91, 0.08);
+        color: var(--primary-dark);
+        font-weight: 700;
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .object-item small {
+        color: var(--muted);
+        display: block;
+        margin-top: 8px;
+      }
+      .object-item-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .object-item-actions button {
+        padding: 8px 10px;
+        font-size: 0.82rem;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .full-width { grid-column: 1 / -1; }
+      .form-actions {
+        margin-top: 14px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      .section-list {
+        display: grid;
+        gap: 12px;
+      }
+      .info-box {
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(44, 107, 91, 0.03);
+      }
+
+      @media (max-width: 900px) {
+        .admin-shell { grid-template-columns: 1fr; }
+        .workspace { padding: 18px 16px 28px; }
+        .content-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 640px) {
+        .topbar { flex-direction: column; align-items: flex-start; }
+        .form-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">Z</span>
+          <span>ZIYAT</span>
+        </div>
+
+        <nav class="nav-group" aria-label="Навигация админки">
+          <div class="nav-label">Главная</div>
+          <button class="nav-btn active" type="button" data-section="dashboard">Обзор</button>
+        </nav>
+
+        <nav class="nav-group">
+          <div class="nav-label">Управление</div>
+          <button class="nav-btn" type="button" data-section="places">Исторические места</button>
+          <button class="nav-btn" type="button" data-section="content">Контент</button>
+          <button class="nav-btn" type="button" data-section="media">Медиатека</button>
+          <button class="nav-btn" type="button" data-section="settings">Настройки</button>
+        </nav>
+
+        <button type="button" class="logout-btn" id="logout">Выйти</button>
+      </aside>
+
+      <main class="workspace">
+        <section id="login-screen" class="login-card">
+          <span class="eyebrow">Администрирование</span>
+          <h1>ZIYAT Admin</h1>
+          <p class="muted">Панель управления историческими местами, карточками и картой проекта.</p>
+
+          <form id="login-form" class="login-form">
+            <div class="field">
+              <label for="username">Логин</label>
+              <input id="username" name="username" type="text" value="ziyat_admin" required />
+            </div>
+            <div class="field">
+              <label for="password">Пароль</label>
+              <input id="password" name="password" type="password" required />
+            </div>
+            <button type="submit" class="primary">Войти</button>
+          </form>
+        </section>
+
+        <div id="admin-app" class="hidden">
+          <header class="topbar">
+            <div>
+              <span class="eyebrow" id="page-tag">Обзор</span>
+              <h1 id="page-title">Административная панель</h1>
+            </div>
+            <div class="topbar-actions">
+              <button type="button" class="secondary" id="new-place">Добавить место</button>
+              <button type="button" class="primary" id="focus-place-form">Редактировать заявку</button>
+            </div>
+          </header>
+
+          <section id="dashboard" class="dashboard section-page active">
+            <div class="stats-grid" id="stats-grid"></div>
+            <div class="quick-grid" id="quick-grid"></div>
+          </section>
+
+          <section id="places" class="section-page hidden">
+            <div class="content-grid">
+              <aside class="panel">
+                <div class="toolbar">
+                  <input id="search-objects" type="search" placeholder="Поиск по объектам" />
+                </div>
+                <div id="object-list" class="object-list"></div>
+              </aside>
+
+              <section class="panel">
+                <h3>Редактор исторического места</h3>
+                <form id="place-form">
+                  <div class="form-grid">
+                    <div class="field full-width">
+                      <label for="title">Название</label>
+                      <input id="title" name="title" type="text" required />
+                    </div>
+
+                    <div class="field">
+                      <label for="category">Категория</label>
+                      <input id="category" name="category" type="text" required />
+                    </div>
+
+                    <div class="field">
+                      <label for="status">Статус проверки</label>
+                      <select id="status" name="status">
+                        <option value="verified">verified</option>
+                        <option value="needs-review">needs-review</option>
+                        <option value="draft">draft</option>
+                      </select>
+                    </div>
+
+                    <div class="field">
+                      <label for="latitude">Широта</label>
+                      <input id="latitude" name="latitude" type="number" step="0.000001" required />
+                    </div>
+
+                    <div class="field">
+                      <label for="longitude">Долгота</label>
+                      <input id="longitude" name="longitude" type="number" step="0.000001" required />
+                    </div>
+
+                    <div class="field full-width">
+                      <label for="historicalPeriod">Исторический период</label>
+                      <input id="historicalPeriod" name="historicalPeriod" type="text" />
+                    </div>
+
+                    <div class="field full-width">
+                      <label for="description">Описание</label>
+                      <textarea id="description" name="description" required></textarea>
+                    </div>
+
+                    <div class="field full-width">
+                      <label for="image">Изображение (URL)</label>
+                      <input id="image" name="image" type="url" />
+                    </div>
+
+                    <div class="field">
+                      <label for="sourceUrl">Ссылка на источник</label>
+                      <input id="sourceUrl" name="sourceUrl" type="url" />
+                    </div>
+
+                    <div class="field">
+                      <label for="sourceLabel">Подпись источника</label>
+                      <input id="sourceLabel" name="sourceLabel" type="text" />
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button type="button" class="secondary" id="cancel-edit">Сбросить</button>
+                    <button type="submit" class="primary">Сохранить</button>
+                  </div>
+                </form>
+              </section>
+            </div>
+          </section>
+
+          <section id="content" class="section-page hidden">
+            <div class="panel">
+              <h3>Контент и публикации</h3>
+              <div class="section-list">
+                <div class="info-box"><strong>Исторические личности</strong><div class="muted">Добавляйте биографии и краткие описания через структуру данных проекта.</div></div>
+                <div class="info-box"><strong>Статьи и энциклопедия</strong><div class="muted">Обновляйте ключевые материалы и сохраняйте проверенные источники.</div></div>
+                <div class="info-box"><strong>Археология</strong><div class="muted">Фиксируйте важные находки и научные материалы без искусственного заполнения контента.</div></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="media" class="section-page hidden">
+            <div class="panel">
+              <h3>Медиатека</h3>
+              <div class="section-list" id="media-list"></div>
+            </div>
+          </section>
+
+          <section id="settings" class="section-page hidden">
+            <div class="panel">
+              <h3>Настройки проекта</h3>
+              <div class="section-list">
+                <div class="info-box"><strong>Главная страница</strong><div class="muted">Содержит заголовок, описание и основное изображение.</div></div>
+                <div class="info-box"><strong>Карта</strong><div class="muted">Места, координаты, категории и источники редактируются в разделе исторических мест.</div></div>
+                <div class="info-box"><strong>Доступ</strong><div class="muted">Текущий уровень защиты настроен в серверной части проекта.</div></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const state = {
+        authenticated: false,
+        places: [],
+        editingId: null,
+        section: 'dashboard'
+      };
+
+      const loginScreen = document.getElementById('login-screen');
+      const adminApp = document.getElementById('admin-app');
+      const loginForm = document.getElementById('login-form');
+      const placeForm = document.getElementById('place-form');
+      const objectList = document.getElementById('object-list');
+      const searchInput = document.getElementById('search-objects');
+      const statusSelect = document.getElementById('status');
+      const cancelEditButton = document.getElementById('cancel-edit');
+      const pageTag = document.getElementById('page-tag');
+      const pageTitle = document.getElementById('page-title');
+      const mediaList = document.getElementById('media-list');
+
+      function setSection(sectionName) {
+        state.section = sectionName;
+        document.querySelectorAll('.nav-btn').forEach(button => {
+          button.classList.toggle('active', button.dataset.section === sectionName);
+        });
+        document.querySelectorAll('.section-page').forEach(el => {
+          el.classList.toggle('hidden', el.id !== sectionName);
+        });
+
+        const labels = {
+          dashboard: 'Обзор',
+          places: 'Исторические места',
+          content: 'Контент',
+          media: 'Медиатека',
+          settings: 'Настройки'
+        };
+        pageTag.textContent = labels[sectionName] || 'Обзор';
+        pageTitle.textContent = labels[sectionName] ? `Управление ${labels[sectionName].toLowerCase()}` : 'Административная панель';
+      }
+
+      async function apiRequest(path, options = {}) {
+        const response = await fetch(path, {
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(options.headers || {})
+          },
+          ...options
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'Request failed');
+        return data;
+      }
+
+      function showLogin() {
+        state.authenticated = false;
+        loginScreen.classList.remove('hidden');
+        adminApp.classList.add('hidden');
+      }
+
+      function showAdmin() {
+        state.authenticated = true;
+        loginScreen.classList.add('hidden');
+        adminApp.classList.remove('hidden');
+      }
+
+      function resetForm() {
+        state.editingId = null;
+        placeForm.reset();
+        statusSelect.value = 'verified';
+      }
+
+      function fillForm(item) {
+        state.editingId = item.id;
+        document.getElementById('title').value = item.title || '';
+        document.getElementById('category').value = item.category || '';
+        document.getElementById('status').value = item.status || 'verified';
+        document.getElementById('latitude').value = item.latitude ?? '';
+        document.getElementById('longitude').value = item.longitude ?? '';
+        document.getElementById('historicalPeriod').value = item.historicalPeriod || '';
+        document.getElementById('description').value = item.description || '';
+        document.getElementById('image').value = item.image || '';
+        document.getElementById('sourceUrl').value = item.sourceUrl || '';
+        document.getElementById('sourceLabel').value = item.sourceLabel || '';
+      }
+
+      function renderDashboard() {
+        const total = state.places.length;
+        const needsReview = state.places.filter(place => place.status === 'needs-review').length;
+        const drafts = state.places.filter(place => place.status === 'draft').length;
+        const withImages = state.places.filter(place => place.image).length;
+        const stats = [
+          { label: 'Всего мест', value: total },
+          { label: 'Проверка', value: needsReview },
+          { label: 'Черновики', value: drafts },
+          { label: 'С фото', value: withImages }
+        ];
+
+        document.getElementById('stats-grid').innerHTML = stats.map(stat => `
+          <div class="stat-card">
+            <span class="muted">${stat.label}</span>
+            <strong>${stat.value}</strong>
+          </div>
+        `).join('');
+
+        const actions = [
+          { label: 'Добавить место', section: 'places' },
+          { label: 'Изменить карту', section: 'places' },
+          { label: 'Контент', section: 'content' },
+          { label: 'Медиатека', section: 'media' }
+        ];
+
+        document.getElementById('quick-grid').innerHTML = actions.map(action => `
+          <button type="button" class="quick-card" data-go="${action.section}">
+            <span class="eyebrow">Быстро</span>
+            <strong>${action.label}</strong>
+          </button>
+        `).join('');
+
+        document.querySelectorAll('[data-go]').forEach(button => {
+          button.addEventListener('click', () => setSection(button.dataset.go));
+        });
+      }
+
+      function renderMediaList() {
+        const items = state.places.filter(place => place.image).slice(0, 8);
+        mediaList.innerHTML = items.length ? items.map(place => `
+          <div class="info-box">
+            <strong>${place.title}</strong>
+            <div class="muted">${place.category}</div>
+            <img src="${place.image}" alt="${place.title}" style="border-radius:12px; margin-top:12px; max-height:120px; object-fit:cover; width:100%;" />
+          </div>
+        `).join('') : '<div class="info-box"><span class="muted">Фотографии ещё не добавлены.</span></div>';
+      }
+
+      function renderList() {
+        const filter = (searchInput.value || '').trim().toLowerCase();
+        const filtered = state.places.filter(place => {
+          if (!filter) return true;
+          return [place.title, place.category, place.description, place.historicalPeriod].join(' ').toLowerCase().includes(filter);
+        });
+
+        objectList.innerHTML = filtered.length
+          ? filtered.map(place => `
+            <article class="object-item">
+              <div class="object-item-header">
+                <div>
+                  <strong>${place.title}</strong>
+                  <small>${place.historicalPeriod || 'Период не указан'}</small>
+                </div>
+                <span class="chip">${place.category || 'разное'}</span>
+              </div>
+              <p class="muted">${(place.description || '').slice(0, 120)}${(place.description || '').length > 120 ? '…' : ''}</p>
+              <small>${place.latitude}, ${place.longitude}</small>
+              <div class="object-item-actions">
+                <button class="secondary" type="button" data-action="edit" data-id="${place.id}">Редактировать</button>
+                <button class="danger" type="button" data-action="delete" data-id="${place.id}">Удалить</button>
+              </div>
+            </article>
+          `).join('')
+          : '<p class="muted">Объекты не найдены.</p>';
+
+        objectList.querySelectorAll('[data-action="edit"]').forEach(button => {
+          button.addEventListener('click', () => {
+            const item = state.places.find(place => place.id === button.dataset.id);
+            if (item) fillForm(item);
+          });
+        });
+
+        objectList.querySelectorAll('[data-action="delete"]').forEach(button => {
+          button.addEventListener('click', async () => {
+            const id = button.dataset.id;
+            const item = state.places.find(place => place.id === id);
+            if (!item || !window.confirm(`Удалить объект “${item.title}”?`)) return;
+            await apiRequest(`/api/admin/map-places/${encodeURIComponent(id)}`, { method: 'DELETE' });
+            await loadPlaces();
+            resetForm();
+          });
+        });
+      }
+
+      async function loadPlaces() {
+        const data = await apiRequest('/api/admin/map-places');
+        state.places = data || [];
+        renderDashboard();
+        renderMediaList();
+        renderList();
+      }
+
+      async function checkAuth() {
+        try {
+          const data = await apiRequest('/api/admin/check');
+          if (data.authenticated) {
+            showAdmin();
+            await loadPlaces();
+            setSection('dashboard');
+            return;
+          }
+        } catch (error) {
+          // ignore
+        }
+        showLogin();
+      }
+
+      loginForm.addEventListener('submit', async event => {
+        event.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        try {
+          await apiRequest('/api/admin/login', {
+            method: 'POST',
+            body: JSON.stringify({ username, password })
+          });
+          showAdmin();
+          await loadPlaces();
+          setSection('dashboard');
+        } catch (error) {
+          window.alert(error.message || 'Ошибка входа');
+        }
+      });
+
+      document.getElementById('logout').addEventListener('click', async () => {
+        try {
+          await apiRequest('/api/admin/logout', { method: 'POST' });
+        } catch (error) {}
+        resetForm();
+        showLogin();
+      });
+
+      document.getElementById('new-place').addEventListener('click', () => {
+        resetForm();
+        setSection('places');
+      });
+
+      document.getElementById('focus-place-form').addEventListener('click', () => {
+        setSection('places');
+      });
+
+      document.querySelectorAll('.nav-btn').forEach(button => {
+        button.addEventListener('click', () => setSection(button.dataset.section));
+      });
+      cancelEditButton.addEventListener('click', () => resetForm());
+      searchInput.addEventListener('input', renderList);
+
+      placeForm.addEventListener('submit', async event => {
+        event.preventDefault();
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          category: document.getElementById('category').value.trim(),
+          status: document.getElementById('status').value,
+          latitude: Number(document.getElementById('latitude').value),
+          longitude: Number(document.getElementById('longitude').value),
+          historicalPeriod: document.getElementById('historicalPeriod').value.trim(),
+          description: document.getElementById('description').value.trim(),
+          image: document.getElementById('image').value.trim(),
+          sourceUrl: document.getElementById('sourceUrl').value.trim(),
+          sourceLabel: document.getElementById('sourceLabel').value.trim()
+        };
+
+        try {
+          if (state.editingId) {
+            await apiRequest(`/api/admin/map-places/${encodeURIComponent(state.editingId)}`, {
+              method: 'PUT',
+              body: JSON.stringify(payload)
+            });
+          } else {
+            await apiRequest('/api/admin/map-places', {
+              method: 'POST',
+              body: JSON.stringify(payload)
+            });
+          }
+
+          resetForm();
+          await loadPlaces();
+          setSection('places');
+        } catch (error) {
+          window.alert(error.message || 'Ошибка сохранения');
+        }
+      });
+
+      resetForm();
+      setSection('dashboard');
+      checkAuth();
+    </script>
+  </body>
+</html>

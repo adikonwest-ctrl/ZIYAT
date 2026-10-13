@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZIYAT</title>
+    <meta name="description" content="ZIYAT — цифровой музей истории Актюбинской области." />
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a href="#home" class="brand" aria-label="ZIYAT">
+          <span class="brand-mark">Z</span>
+          <span>ZIYAT</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Основная навигация">
+          <a href="#home">Главная</a>
+          <a href="#map-section">Карта</a>
+          <a href="#places">Места</a>
+          <a href="#people">Личности</a>
+          <a href="#encyclopedia">Энциклопедия</a>
+          <a href="#archaeology">Археология</a>
+          <a href="#about">О проекте</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="home" class="hero section">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <span class="eyebrow">Цифровой музей истории</span>
+            <h1 id="site-title">ZIYAT</h1>
+            <p id="site-tagline" class="lead">История, память и знания Актюбинского края</p>
+            <p id="site-description" class="lead">Образовательная платформа о людях, местах и событиях региона.</p>
+            <div class="hero-actions">
+              <a class="button primary" href="#map-section" id="map-cta">Перейти к карте</a>
+              <a class="button ghost" href="#people">Смотреть личности</a>
+            </div>
+            <div class="hero-meta">
+              <div>
+                <strong>3</strong>
+                <span>проверенные точки</span>
+              </div>
+              <div>
+                <strong>6</strong>
+                <span>основных блоков</span>
+              </div>
+              <div>
+                <strong>1</strong>
+                <span>единая страница</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-label="Историческое изображение">
+            <div class="visual-badge">Актюбинская область</div>
+            <div class="visual-content">
+              <span class="mini-label">Пространство памяти</span>
+              <h2>История в контексте места</h2>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="map-section" class="section map-section">
+        <div class="container">
+          <div class="title-row">
+            <div>
+              <span class="eyebrow">Карта</span>
+              <h2>Исторические объекты Актюбинской области</h2>
+            </div>
+          </div>
+
+          <div class="map-layout">
+            <div class="map-panel">
+              <div class="map-toolbar">
+                <input id="place-search" type="search" placeholder="Поиск по названию объекта" aria-label="Поиск по объектам" />
+                <select id="category-filter" aria-label="Фильтр по категории">
+                  <option value="all">Все категории</option>
+                </select>
+              </div>
+              <div id="map" aria-label="Карта исторических объектов"></div>
+            </div>
+
+            <aside class="map-sidebar">
+              <div class="info-card">
+                <span class="mini-label">Объект</span>
+                <div id="map-details" class="map-details"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="places" class="section">
+        <div class="container">
+          <div class="title-row">
+            <div>
+              <span class="eyebrow">Исторические места</span>
+              <h2>Объекты, связанные с памятью региона</h2>
+            </div>
+          </div>
+          <div id="places-grid" class="card-grid"></div>
+        </div>
+      </section>
+
+      <section id="people" class="section alt-section">
+        <div class="container">
+          <div class="title-row">
+            <div>
+              <span class="eyebrow">Исторические личности</span>
+              <h2>Люди, оставившие след в культуре и памяти</h2>
+            </div>
+          </div>
+          <div id="people-grid" class="card-grid"></div>
+        </div>
+      </section>
+
+      <section id="encyclopedia" class="section">
+        <div class="container">
+          <div class="title-row">
+            <div>
+              <span class="eyebrow">Энциклопедия</span>
+              <h2>Материалы и источники по истории края</h2>
+            </div>
+          </div>
+          <div id="encyclopedia-grid" class="card-grid"></div>
+        </div>
+      </section>
+
+      <section id="archaeology" class="section archaeology-section">
+        <div class="container archaeology-layout">
+          <div class="archaeology-content">
+            <span class="eyebrow">Археология</span>
+            <h2>Раскопки и исследования в контексте региона</h2>
+            <p>На ранних этапах проекта основное внимание уделяется сохранению и систематизации проверяемых материалов, важнейших находок и описанию культурных слоёв, связанных с историей Актюбинской области.</p>
+            <p>Материалы дополняются по мере появления подтверждённых публикаций, авторитетных музеев и научных исследований.</p>
+          </div>
+          <div class="archaeology-visual">
+            <div class="archaeology-card">
+              <span class="mini-label">В фокусе</span>
+              <h3>Культурные слои и локальная память</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section footer-section">
+        <div class="container footer-grid">
+          <div>
+            <span class="eyebrow">О проекте</span>
+            <h2>ZIYAT</h2>
+            <p id="site-summary">Образовательная платформа о людях, местах и событиях региона.</p>
+          </div>
+          <div>
+            <h3>Навигация</h3>
+            <ul class="footer-links">
+              <li><a href="#home">Главная</a></li>
+              <li><a href="#map-section">Карта</a></li>
+              <li><a href="#places">Места</a></li>
+              <li><a href="#people">Личности</a></li>
+              <li><a href="#encyclopedia">Энциклопедия</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Принципы</h3>
+            <p>Проверяемые источники, историческая точность и простой доступ к материалам.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-bar">
+        <span>© 2026 ZIYAT</span>
+        <span>История в цифровом пространстве</span>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="/app.js"></script>
+  </body>
+</html>
